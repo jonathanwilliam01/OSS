@@ -4,11 +4,12 @@
  * Sistema de Ordem de Serviço Multiempresa
  */
 
-$db_host = getenv('DB_HOST');
-$db_port = getenv('DB_PORT');
-$db_name = getenv('DB_NAME');
-$db_user = getenv('DB_USER');
-$db_pass = getenv('DB_PASS');
+// Carregar variáveis de ambiente do Docker
+$db_host = getenv('DB_HOST') ?: 'postgres';
+$db_port = getenv('DB_PORT') ?: '5432';
+$db_name = getenv('DB_NAME') ?: 'OSS';
+$db_user = getenv('DB_USER') ?: 'sysdba';
+$db_pass = getenv('DB_PASS') ?: 'oss';
 
 try {
     // String de conexão PDO para PostgreSQL

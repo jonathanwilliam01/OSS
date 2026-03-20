@@ -18,10 +18,9 @@ Sistema web de ordens de serviço com arquitetura multiempresa usando PHP, Postg
 2. **Verifique o arquivo .env**
    ```env
    DB=OSS
-   HOST=sysdba
-   PORT=5432
-   USER=localhost
+   USER=sysdba
    PASS=oss
+   PORT=5432
    ```
 
 3. **Construa e inicie os containers**
@@ -58,7 +57,7 @@ docker-compose up -d --build
 docker exec -it oss_web bash
 
 # Acessar o PostgreSQL
-docker exec -it sysdba psql -U localhost -d OSS
+docker exec -it oss_postgres psql -U sysdba -d OSS
 
 # Remover tudo (incluindo volumes)
 docker-compose down -v
@@ -82,10 +81,11 @@ docker-compose down -v
 ## 🗄️ Banco de Dados
 
 O PostgreSQL está configurado com:
-- **Host**: sysdba (container)
+- **Host (interno)**: postgres (nome do serviço Docker)
+- **Host (externo)**: localhost
 - **Porta**: 5432
 - **Banco**: OSS
-- **Usuário**: localhost
+- **Usuário**: sysdba
 - **Senha**: oss
 
 ### Inicialização Automática
@@ -107,7 +107,7 @@ O banco de dados **OSS** e todas as tabelas são criados automaticamente na prim
 
 ### Conectar ao banco externamente
 
-```bash
+```bashsysdba
 psql -h localhost -p 5432 -U localhost -d OSS
 # Senha: oss
 ```

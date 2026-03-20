@@ -4,7 +4,7 @@ services:
   # Serviço PostgreSQL
   postgres:
     image: postgres:15-alpine
-    container_name: ${HOST}
+    container_name: oss_postgres
     restart: always
     environment:
       POSTGRES_DB: ${DB}
@@ -35,8 +35,8 @@ services:
     volumes:
       - ./src:/var/www/html
     environment:
-      DB_HOST: ${HOST}
-      DB_PORT: ${PORT}
+      DB_HOST: postgres
+      DB_PORT: 5432
       DB_NAME: ${DB}
       DB_USER: ${USER}
       DB_PASS: ${PASS}
