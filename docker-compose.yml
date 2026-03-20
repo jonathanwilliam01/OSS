@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Serviço PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: ${HOST}
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB}
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASS}
+    ports:
+      - "${PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${USER} -d ${DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - oss_network
+
+  # Serviço PHP com Apache
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oss_web
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      DB_HOST: ${HOST}
+      DB_PORT: ${PORT}
+      DB_NAME: ${DB}
+      DB_USER: ${USER}
+      DB_PASS: ${PASS}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - oss_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  oss_network:
+    driver: bridge
